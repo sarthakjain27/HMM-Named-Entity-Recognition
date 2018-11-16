@@ -95,12 +95,14 @@ def predict(one_line_raw_data_no_split,raw_test_data,conv_test_data,label_dict,p
         alpha_dot_beta=np.multiply(alpha,beta)
         max_label_index=alpha_dot_beta.argmax(axis=0)
         each_sent_predict_label=[label_dict.keys()[label_dict.values().index(k)] for k in max_label_index]
-        x[index]=[each_sentence[k]+'_'+each_sent_predict_label[k] for k in range(len(each_sentence))]
+        x[index]=[each_sentence[k]+'_'+each_sent_predict_label[k]+' ' for k in range(len(each_sentence))]
+        x[index][len(each_sentence)-1]=x[index][len(each_sentence)-1].rstrip(' ')
+
 
     with open(sys.argv[7],'w') as f:
         for each_row in x:
             for each_col in each_row:
-                f.write(each_col+' ')
+                f.write(each_col)
             f.write('\n')
 
     accur=accuracy(one_line_raw_data_no_split,x)

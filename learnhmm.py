@@ -1,20 +1,18 @@
 from __future__ import division
-__author__ = 'SARTHAK JAIN'
 import sys
-import cProfile
+__author__ = 'SARTHAK JAIN'
 
 
 def create_data_matrix(file,word_dict,label_dict):
 
-    with open(file,'rb') as f:
+    with open(file,'r') as f:
         no_split_data=[line.split() for line in f]
         one_line_raw=[j for i in no_split_data for j in i]
-        #print(one_line_raw)
 
-    with open(file, 'rb') as f:
+
+    with open(file, 'r') as f:
         data=[line.replace("_"," ").split() for line in f]
-        #print(data)
-
+    
     raw_data=[]
     conv_data=[]
     raw_label=[]
@@ -62,12 +60,13 @@ def create_emmit(file,train_conv_data,train_conv_label,word_dict,label_dict):
     for row,each_row in enumerate(x):
         normalizing_factor=sum(each_row)
         for col,each in enumerate(each_row):
-            x[row][col]=x[row][col]/normalizing_factor
+            x[row][col]=str(x[row][col]/normalizing_factor)+' '
+        x[row][col]=x[row][col].rstrip(' ')
 
     with open(file,'w') as f:
         for each_row in x:
             for each_col in each_row:
-                f.write(str(each_col)+' ')
+                f.write(each_col)
             f.write('\n')
 
     return x
@@ -82,12 +81,13 @@ def create_trans(file,lab_trans,label_dict):
     for row,each_row in enumerate(x):
         normalizing_factor=sum(each_row)
         for col,each in enumerate(each_row):
-            x[row][col]=x[row][col]/normalizing_factor
+            x[row][col]=str(x[row][col]/normalizing_factor)+' '
+        x[row][col]=x[row][col].rstrip(' ')
 
     with open(file,'w') as f:
         for each_row in x:
             for each_col in each_row:
-                f.write(str(each_col)+' ')
+                f.write(each_col)
             f.write('\n')
 
     return x
@@ -98,6 +98,6 @@ if __name__ == "__main__":
 
     one_line_data_raw,one_line_lab_trans_raw,train_raw_data, train_conv_data, train_raw_label,train_conv_label=create_data_matrix(sys.argv[1],word_dict,label_dict)
 
-    #create_prior(sys.argv[4],train_raw_label,label_dict)
-    #create_emmit(sys.argv[5],train_conv_data,train_conv_label,word_dict,label_dict)
+    create_prior(sys.argv[4],train_raw_label,label_dict)
+    create_emmit(sys.argv[5],train_conv_data,train_conv_label,word_dict,label_dict)
     create_trans(sys.argv[6],one_line_lab_trans_raw,label_dict)
